@@ -1,6 +1,7 @@
 import numpy as np
 from rule import Game
 from nn import Model,CNN
+import random
 
 board_black = np.zeros(shape=(8,8), dtype='int8')
 board_black[3][4] = 1
@@ -12,7 +13,7 @@ board = np.array([board_black,board_white])
 game = Game(board)
 model = Model()
 
-turn = 1 # 1:プレイヤー -1:コンピューター
+turn = -1 # 1:プレイヤー -1:コンピューター
 passed = False #前回がパスか
 
 while(1):
@@ -61,8 +62,9 @@ while(1):
             if len(list) > 0:
                 #TODO
                 print("コンピューター困惑中...")
-                game.put(list[0])
-                print(int(list[0]/8)+1,(list[0]%8)+1)
+                num = random.choice(list)
+                game.put(num)
+                print(int(num/8)+1,(num%8)+1)
                 passed = False
             else:
                 print("打てる場所がありません。パスします")

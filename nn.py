@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import random
 from rule import Game
 
 # ネットワークの定義
@@ -35,16 +36,22 @@ class Model():
     def think(self,board): #board: np.array
         with torch.no_grad():
             board_data = torch.Tensor(np.array([board])).to(self.device)
-            result = self.model(board_data)
-            indices = torch.where(result > 0)
-            result = result[torch.where(result > 0)]
-            result = torch.sort(result, descending=True)
-            indices = indices[1][result.indices]
-
             game = Game(board)
-            for i in range(len(indices)):
-                if game.can_put(int(indices[i])):
-                    return int(indices[i])
+            # 隅は強制
+            special_places = [0,7,56,63]
+            for num in special_places:
+                if game.can_put(int(num)):
+                    return int(num)
+
+            result = self.model(board_data)
+            result = torch.sort(result, descending=True)
+            sm = nn.Softmax(dim=1)
+            result_sm = sm(result[0])[0]
+            
+            chosen = random.choices(result.indices[0],result_sm,k=10)
+            for num in chosen:
+                if game.can_put(int(num)):
+                    return int(num)
             
             return -1
 

@@ -22,16 +22,6 @@ sample_test = True
 
 start = time.time()
 
-# データの前処理の定義
-# transform = transforms.Compose([
-#     transforms.ToTensor(),  # 画像をTensorに変換
-#     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # 正規化（平均と標準偏差を指定）
-# ])
-
-# CIFAR-10データセットをダウンロード（訓練用とテスト用）
-# train_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
-# test_dataset = datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
-
 x = np.load("./data/x/all.npy")
 y = np.load("./data/y/all.npy")
 
@@ -54,10 +44,6 @@ test_loader = DataLoader(test_dataset, batch_size=batch, shuffle=False)
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
-        # self.conv1 = nn.Conv2d(3, 128, kernel_size=3,padding=1) #畳み込み層:(入力チャンネル数, 出力チャンネル数、カーネルサイズ、パディング)
-        # self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-        # self.fc1 = nn.Linear(128 * 16 * 16, 128)
-        # self.fc2 = nn.Linear(128, 10) #画像が10種類のため
 
         # 2*8*8
         self.conv = nn.Conv2d(2, 16, kernel_size=3,padding=1)
@@ -74,30 +60,6 @@ class CNN(nn.Module):
         self.conv2 = nn.Conv2d(128, 128, kernel_size=3,padding=1)
 
     def forward(self, x):
-        # x = self.conv1(x)
-        # x = self.relu(x)
-        # x = self.pool(x) 
-        # x = x.view(x.size()[0],-1)
-        # x = self.fc1(x)
-        # x = self.relu(x)
-        # x = self.fc2(x)
-        # x = self.softmax(x)
-
-        # x = self.conv(x)
-        # x = self.relu(x)
-        # x = x.view(x.size()[0],-1)
-        # x = self.fc(x)
-        # x = self.relu(x)
-        # return x
-
-        # x = self.conv(x)
-        # x = self.relu(x)
-        # x = self.pool(x)
-        # x = x.view(x.size()[0],-1)
-        # x = self.fc(x)
-        # x = self.relu(x)
-        # return x
-
         for i in range(0,ker_rep):
             if i == 0:
                 x = self.conv1(x)
@@ -107,14 +69,6 @@ class CNN(nn.Module):
         x = x.view(x.size()[0],-1)
         x = self.fc1(x)
         return x
-
-
-        # x = x.view(x.size()[0],-1)
-        # x = self.fc2(x)
-        # x = self.relu(x)
-        # x = self.fc3(x)
-        # x = self.relu(x)
-        # return x
 
 
 # モデル、損失関数、最適化手法の設定
@@ -182,7 +136,6 @@ if(testloader_test):
     print("テスト損失:", round(test_loss / len(test_loader),5))
     print("テスト精度（正答率）:", str(round(correct / total * 100, 2)) +"%")
 
-# オセロの初期の盤面データを与える
 board_data = torch.Tensor([[
 [[0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0],

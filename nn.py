@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import numpy as np
-import pprint
 from rule import Game
 
 # ネットワークの定義
@@ -33,43 +32,40 @@ class Model():
         self.model = torch.load("./model/model_save_1104_2048_192_7")
         self.model = self.model.to(self.device)
 
-    # empty_board = np.zeros(shape=(8,8), dtype='int8')
-
-    def think(self,board):
+    def think(self,board): #board: np.array
         with torch.no_grad():
-            board_data = board.to(self.device)
+            board_data = torch.Tensor(np.array([board])).to(self.device)
             result = self.model(board_data)
             indices = torch.where(result > 0)
             result = result[torch.where(result > 0)]
             result = torch.sort(result, descending=True)
             indices = indices[1][result.indices]
 
-            game = Game(np.array(board)[0])
+            game = Game(board)
             for i in range(len(indices)):
                 if game.can_put(int(indices[i])):
                     return int(indices[i])
             
             return -1
 
-# オセロの初期の盤面データを与える
-board_data = torch.Tensor([[
-    [[0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,1,0,0,0],
-    [0,0,0,0,1,1,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0]],
+# board_data = np.array([
+#     [[0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,1,0,0,0],
+#     [0,0,0,0,1,1,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0]],
 
-    [[0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,1,0,0,0,0],
-    [0,0,0,1,0,0,0,0],
-    [0,0,0,1,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0]]]])
+#     [[0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,1,0,0,0,0],
+#     [0,0,0,1,0,0,0,0],
+#     [0,0,0,1,0,0,0,0],
+#     [0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,0,0]]])
 
-model = Model()
-print(model.think(board_data))
+# model = Model()
+# print(model.think(board_data))

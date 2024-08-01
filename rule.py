@@ -10,6 +10,7 @@ class Game:
         # board_white[4][4] = 1
         # self.board = np.array([board_black,board_white])
         self.board = board
+        self.cnt = 0
 
     def num_to_xy(self,num):
         x = int(num/8)
@@ -20,6 +21,8 @@ class Game:
         tmp = self.board[0].copy()
         self.board[0] = self.board[1]
         self.board[1] = tmp
+        self.cnt += 1
+
 
     def will_be_reversed(self,num): #ひっくり返せる場所を返す
         x,y = self.num_to_xy(num)
@@ -54,12 +57,12 @@ class Game:
         else:
             return False
     
-    def possible_list(self,num):
-        ret = np.zeros(shape=(8,8), dtype='int8')
+    def possible_list(self):
+        ret = np.array([],dtype='int8')
         for i in range(8):
             for j in range(8):
-                if self.can_put(num):
-                    ret[i][j] = 1
+                if self.can_put(int(i*8+j)):
+                    ret = np.append(ret,int(i*8+j))
         return ret
     
     def put(self,num):
@@ -68,10 +71,43 @@ class Game:
         self.board[0] += arr
         self.board[1] -= arr
         self.board[0][x][y] = 1
+    
+    def you_cnt(self):
+        return np.sum(self.board[0])
+    
+    def opo_cnt(self):
+        return np.sum(self.board[1])
+    
+    def output_board(self):
+        return self.board
+    
+    def print_board(self):
+        print(" ",end="　")
+        for i in range(1,9):
+            print(i,end="　")
+        print()
 
-# othello = Game()
+        for i in range(0,8):
+            print("　────────────────────────")
+            print(i+1,end="｜")
+            for j in range(0,8):
+                if self.board[0][i][j] == 1:
+                    if self.cnt % 2 == 0:
+                        print("○",end="｜")
+                    else:
+                        print("●",end="｜")
+                elif self.board[1][i][j] == 1:
+                    if self.cnt % 2 == 0:
+                        print("●",end="｜")
+                    else:
+                        print("○",end="｜")
+                else:
+                    print(" ",end="｜")
+            print()
+        print("　────────────────────────")
 
-# othello.board = np.array([
+
+# board = np.array([
 # [[0,0,0,0,0,0,0,0],
 #  [0,1,1,1,0,1,1,1],
 #  [0,1,0,0,0,0,0,1],
@@ -89,7 +125,9 @@ class Game:
 #  [0,0,1,1,1,1,1,0],
 #  [0,0,1,1,1,1,1,0],
 #  [0,0,0,0,0,0,0,0]]])
+# game = Game(board)
+# game.print_board()
 
-# # othello.put(4,4)
-# # othello.change_turn()
-# print(othello.possible_list())
+# game.put(4*8+4)
+# game.change_turn()
+# game.print_board()

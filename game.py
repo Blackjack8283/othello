@@ -58,29 +58,20 @@ while(1):
             print(int(think_num/8)+1,(think_num%8)+1)
             passed = False
         else:
-            list = game.possible_list()
-            if len(list) > 0:
-                #TODO
-                print("コンピューター困惑中...")
-                num = random.choice(list)
-                game.put(num)
-                print(int(num/8)+1,(num%8)+1)
-                passed = False
-            else:
-                print("打てる場所がありません。パスします")
-                if(passed):
-                    opo = game.you_cnt()
-                    you = game.opo_cnt()
-                    print("あなた"+str(you)+"石 "+"相手"+str(opo)+"石")
-                    if you>opo:
-                        print("あなたの勝ち")
-                    elif you<opo:
-                        print("あなたの負け")
-                    else:
-                        print("引き分け")
-                    break
+            print("打てる場所がありません。パスします")
+            if(passed):
+                opo = game.you_cnt()
+                you = game.opo_cnt()
+                print("あなた"+str(you)+"石 "+"相手"+str(opo)+"石")
+                if you>opo:
+                    print("あなたの勝ち")
+                elif you<opo:
+                    print("あなたの負け")
                 else:
-                    passed = True
+                    print("引き分け")
+                break
+            else:
+                passed = True
 
     game.change_turn()
     turn*=-1

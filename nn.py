@@ -44,16 +44,43 @@ class Model():
                     return int(num)
 
             result = self.model(board_data)
-            result = torch.sort(result, descending=True)
-            sm = nn.Softmax(dim=1)
-            result_sm = sm(result[0])[0]
+
+            cnt = board[0].sum()+board[1].sum()
+            if cnt < 24: #序盤の石数重視
+                bonus = 1.0
+            else:
+                bonus = 0.0
+
+            weight = np.array([])
+            indices = np.array([])
+            for i in range(64):
+                # if game.can_put(i):
+                    weight = np.append(weight, float(result[0][i])+game.will_be_reversed(i).sum()*bonus )
+                    indices = np.append(indices, i)
             
-            chosen = random.choices(result.indices[0],result_sm,k=10)
+            sm = nn.Softmax(dim=0)
+            weight = torch.Tensor(weight).to(self.device)
+            weight = sm(weight)
+            print(weight)
+            # print(indices)
+            
+            # if len(indices) != 0:
+            #     return int( random.choices(indices,weight)[0] )
+            # else:
+            #     return -1
+
+            chosen = random.choices(indices,weight,k=10)
             for num in chosen:
                 if game.can_put(int(num)):
                     return int(num)
             
-            return -1
+            list = game.possible_list()
+            ret = -1; ma = 0
+            for num in list:
+                if weight[num]>ma:
+                    ma = weight[num]
+                    ret = num
+            return ret
 
 # board_data = np.array([
 #     [[0,0,0,0,0,0,0,0],

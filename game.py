@@ -13,8 +13,18 @@ board = np.array([board_black,board_white])
 game = Game(board)
 model = Model()
 
-turn = -1 # 1:プレイヤー -1:コンピューター
+turn = 1 # 1:プレイヤー -1:コンピューター
 passed = False #前回がパスか
+
+while(1):
+    print("先手で打つ場合は0、後手で打つ場合は1を入力してください")
+    num = int(input())
+    if num == 0:
+        turn = 1
+        break
+    elif num == 1:
+        turn = -1
+        break
 
 while(1):
     game.print_board()

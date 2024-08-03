@@ -46,7 +46,9 @@ class Model():
             result = self.model(board_data)
 
             cnt = board[0].sum()+board[1].sum()
-            if cnt < 24: #序盤の石数重視
+            if cnt < 16: #序盤の石数重視
+                bonus = 3.0
+            elif cnt < 24:
                 bonus = 1.0
             else:
                 bonus = 0.0
@@ -61,7 +63,7 @@ class Model():
             sm = nn.Softmax(dim=0)
             weight = torch.Tensor(weight).to(self.device)
             weight = sm(weight)
-            print(weight)
+            # print(weight)
             # print(indices)
             
             # if len(indices) != 0:

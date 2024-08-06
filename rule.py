@@ -82,13 +82,13 @@ class Game:
         return self.board
     
     def print_board(self):
-        print(" ",end="　")
+        print(" ",end="  ")
         for i in range(1,9):
-            print(i,end="　")
+            print(i,end="  ")
         print()
 
         for i in range(0,8):
-            print("　────────────────────────")
+            print("  ────────────────────────")
             print(i+1,end="｜")
             for j in range(0,8):
                 if self.board[0][i][j] == 1:
@@ -104,7 +104,7 @@ class Game:
                 else:
                     print(" ",end="｜")
             print()
-        print("　────────────────────────")
+        print("  ────────────────────────")
 
 
 # board = np.array([

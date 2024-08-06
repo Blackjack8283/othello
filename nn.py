@@ -28,10 +28,12 @@ class Model():
     def __init__(self):        
         if torch.cuda.is_available():
             self.device = torch.device("cuda:0")
+            self.model = torch.load("./model/model_save_1104_2048_192_7")
+            self.model = self.model.to(self.device)
         else:
             self.device = torch.device("cpu")
-        self.model = torch.load("./model/model_save_1104_2048_192_7")
-        self.model = self.model.to(self.device)
+            self.model = torch.load("./model/model_save_1104_2048_192_7", torch.device('cpu'))
+            self.model = self.model.to(self.device)
 
     def think(self,board): #board: np.array
         with torch.no_grad():
